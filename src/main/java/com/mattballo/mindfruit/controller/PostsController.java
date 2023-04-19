@@ -1,5 +1,6 @@
 package com.mattballo.mindfruit.controller;
 
+import com.mattballo.mindfruit.annotation.ApiV1;
 import com.mattballo.mindfruit.entity.Post;
 import com.mattballo.mindfruit.service.PostsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@ApiV1
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PostsController {
 
