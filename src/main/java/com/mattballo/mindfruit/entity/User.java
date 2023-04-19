@@ -14,6 +14,7 @@ import lombok.Setter;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class User {
+    // TODO: Validation
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
