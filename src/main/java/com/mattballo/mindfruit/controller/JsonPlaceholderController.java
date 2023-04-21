@@ -1,17 +1,16 @@
 package com.mattballo.mindfruit.controller;
 
-import com.mattballo.mindfruit.annotation.ApiV1;
 import com.mattballo.mindfruit.entity.Post;
 import com.mattballo.mindfruit.entity.User;
+import com.mattballo.mindfruit.exception.NotFoundException;
+import com.mattballo.mindfruit.model.ApiResponse;
 import com.mattballo.mindfruit.service.JsonPlaceholderService;
-import com.mattballo.mindfruit.service.PostsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@ApiV1
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class JsonPlaceholderController {
 
@@ -19,18 +18,27 @@ public class JsonPlaceholderController {
     private JsonPlaceholderService service;
 
     @GetMapping("/users")
-    public List<User> getAllPosts() {
-        return service.getAllUsers();
+    public ApiResponse<List<User>> getAllUsers() {
+        return new ApiResponse<>(service
+                .getAllUsers()
+                .orElseThrow(() -> new NotFoundException("Users not found"))
+        );
     }
 
     @GetMapping("/users/{id}")
-    public User getUserById(@PathVariable Long id) {
-        return service.getUser(id);
+    public ApiResponse<User> getUserById(@PathVariable Long id) {
+        return new ApiResponse<>(service
+                .getUser(id)
+                .orElseThrow(() -> new NotFoundException("User with id: " + id + " not found"))
+        );
     }
 
     @GetMapping("/posts/external/{id}")
-    public Post getPostById(@PathVariable Long id) {
-        return service.getPost(id);
+    public ApiResponse<Post> getPostById(@PathVariable Long id) {
+        return new ApiResponse<>(service
+                .getPost(id)
+                .orElseThrow(() -> new NotFoundException("Post with id: " + id + " not found"))
+        );
     }
 
 }

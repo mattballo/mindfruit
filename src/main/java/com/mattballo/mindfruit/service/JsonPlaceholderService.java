@@ -8,9 +8,11 @@ import com.mattballo.mindfruit.util.ExternalApiUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class JsonPlaceholderService implements IJsonPlaceholderService {
@@ -22,51 +24,51 @@ public class JsonPlaceholderService implements IJsonPlaceholderService {
     private String postsApiUrl;
 
     @Override
-    public List<User> getAllUsers() {
+    public Optional<List<User>> getAllUsers() {
         try {
             HttpURLConnection conn = ExternalApiUtil.getConnection(usersApiUrl);
             ObjectMapper mapper = new ObjectMapper();
             TypeFactory typeFactory = mapper.getTypeFactory();
-            return mapper.readValue(
+            return Optional.of(mapper.readValue(
                     conn.getInputStream(),
                     typeFactory.constructCollectionType(List.class, User.class)
-            );
+            ));
         } catch (IOException e) {
-            return null;
+            return Optional.empty();
         }
     }
 
     @Override
-    public User getUser(Long id) {
+    public Optional<User> getUser(Long id) {
         try {
             HttpURLConnection conn = ExternalApiUtil.getConnection(usersApiUrl + id);
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(conn.getInputStream(), User.class);
+            return Optional.of(mapper.readValue(conn.getInputStream(), User.class));
         } catch (IOException e) {
-            return null;
+            return Optional.empty();
         }
     }
 
     @Override
-    public User getUserByEmail(String email) {
+    public Optional<User> getUserByEmail(String email) {
         try {
             HttpURLConnection conn = ExternalApiUtil.getConnection(usersApiUrl + "?email=" + email);
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(conn.getInputStream(), User.class);
+            return Optional.of(mapper.readValue(conn.getInputStream(), User.class));
         } catch (IOException e) {
-            return null;
+            return Optional.empty();
         }
     }
 
 
     @Override
-    public Post getPost(Long id) {
+    public Optional<Post> getPost(Long id) {
         try {
             HttpURLConnection conn = ExternalApiUtil.getConnection(postsApiUrl + id);
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(conn.getInputStream(), Post.class);
+            return Optional.of(mapper.readValue(conn.getInputStream(), Post.class));
         } catch (IOException e) {
-            return null;
+            return Optional.empty();
         }
     }
 

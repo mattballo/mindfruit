@@ -27,14 +27,12 @@ import java.util.stream.Collectors;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final RsaKeyProperties rsaKeys;
-
     @Autowired
     private JsonPlaceholderService jsonPlaceholderService;
+    private final RsaKeyProperties rsaKeys;
 
-    public SecurityConfig(RsaKeyProperties rsaKeys, JsonPlaceholderService jsonPlaceholderService) {
+    public SecurityConfig(RsaKeyProperties rsaKeys) {
         this.rsaKeys = rsaKeys;
-        this.jsonPlaceholderService = jsonPlaceholderService;
     }
 
     @Bean
@@ -46,15 +44,15 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService user() {
-        return new InMemoryUserDetailsManager(
-                jsonPlaceholderService.getAllUsers()
-                        .stream().map(author -> User
+        return new InMemoryUserDetailsManager(jsonPlaceholderService.getAllUsers()
+                .map(users -> users.stream()
+                        .map(author -> User
                                 .withUsername(author.getEmail())
                                 .password("{noop}" + author.getPhone())
                                 .authorities("read")
                                 .build())
-                        .collect(Collectors.toList())
-        );
+                        .collect(Collectors.toList()))
+                .orElseThrow(() -> new IllegalStateException("Unable to get users")));
     }
 
     @Bean
@@ -62,7 +60,7 @@ public class SecurityConfig {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/api/v1/login").permitAll()
+                    .requestMatchers("/login").permitAll()
                     .anyRequest().authenticated()
             )
             .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)

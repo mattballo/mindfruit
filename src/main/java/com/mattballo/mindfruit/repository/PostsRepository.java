@@ -2,6 +2,7 @@ package com.mattballo.mindfruit.repository;
 
 import com.mattballo.mindfruit.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -9,4 +10,7 @@ import java.util.List;
 @Repository
 public interface PostsRepository extends JpaRepository<Post, Long> {
     List<Post> findByUserId(Long id);
+
+    @Query(value = "SELECT next_val+1 FROM post_seq", nativeQuery = true) // TODO: Improve
+    Long getNextId();
 }
