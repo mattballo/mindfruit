@@ -47,6 +47,17 @@ public class JsonPlaceholderService implements IJsonPlaceholderService {
         }
     }
 
+    @Override
+    public User getUserByEmail(String email) {
+        try {
+            HttpURLConnection conn = ExternalApiUtil.getConnection(usersApiUrl + "?email=" + email);
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(conn.getInputStream(), User.class);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
 
     @Override
     public Post getPost(Long id) {

@@ -1,5 +1,6 @@
 package com.mattballo.mindfruit.controller;
 
+import com.mattballo.mindfruit.annotation.ApiV1;
 import com.mattballo.mindfruit.entity.Post;
 import com.mattballo.mindfruit.entity.User;
 import com.mattballo.mindfruit.service.JsonPlaceholderService;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/")
+@ApiV1
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class JsonPlaceholderController {
 
