@@ -2,7 +2,6 @@ package com.mattballo.mindfruit.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mattballo.mindfruit.model.ApiResponse;
-
 import org.apache.tomcat.util.http.fileupload.impl.InvalidContentTypeException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
@@ -16,7 +15,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.MethodNotAllowedException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -52,7 +52,9 @@ public class ApiResponseExceptionHandler extends ResponseEntityExceptionHandler 
             status = HttpStatus.METHOD_NOT_ALLOWED;
         }
 
-        LoggerFactory.getLogger(ApiResponseExceptionHandler.class).error(exception.getClass().getName());
+        LoggerFactory.getLogger(ApiResponseExceptionHandler.class).error(
+                exception.getClass().getName() + " " + exception.getMessage()
+        );
         return ResponseEntity.status(status).body(new ApiResponse(
                 handleExceptionInternal(exception, exception.getMessage(), new HttpHeaders(), status, request))
         );

@@ -3,14 +3,13 @@ package com.mattballo.mindfruit.service;
 import com.mattballo.mindfruit.entity.Post;
 import com.mattballo.mindfruit.exception.NotFoundException;
 import com.mattballo.mindfruit.repository.PostsRepository;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j // TODO: Remove
 @Service
 public class PostsService implements IPostsService {
 
@@ -21,33 +20,27 @@ public class PostsService implements IPostsService {
     private JsonPlaceholderService jsonPlaceholderService;
 
     @Override
+    @Transactional
     public Post savePost(Post post) {
-        if (post.getId() == null) {
-            post.setId(postsRepository.getNextId());
-        }
+        post.setId(post.getId() == null ? postsRepository.getNextId() : post.getId());
         return postsRepository.save(post);
     }
 
     @Override
     public List<Post> getAllPosts() {
-        List<Post> posts = postsRepository.findAll();
-        if (posts.isEmpty()) {
-            throw new NotFoundException("No posts found in the database");
-        }
-        return posts;
+        return Optional.of(postsRepository.findAll())
+                .orElseThrow(() -> new NotFoundException("No posts found in the database"));
     }
 
     @Override
     public List<Post> getPostByUserId(Long id) {
-        List<Post> posts = postsRepository.findByUserId(id);
-        if (posts.isEmpty()) {
-            throw new NotFoundException("No posts found for user with id: " + id);
-        }
-        return posts;
+        return Optional.of(postsRepository.findByUserId(id))
+                .orElseThrow(() -> new NotFoundException("No posts found for user with id: " + id));
     }
 
 
     @Override
+    @Transactional
     public Post getPost(Long id) {
         return postsRepository.findById(id)
                 .orElseGet(() -> {
@@ -56,23 +49,21 @@ public class PostsService implements IPostsService {
                                     new NotFoundException("Post with specified id: " + id + " does not exist")
                             );
                     post.setId(id);
-                    log.warn("Post from external" + post.getId());
                     postsRepository.save(post);
                     return post;
                 });
     }
 
 
-
     @Override
+    @Transactional
     public Post updatePost(Long id, Post post) {
         return postsRepository.findById(id)
                 .map(originalPost -> {
-                    // TODO: Remove ifs
-                    if (post.getTitle() != null && !post.getTitle().isEmpty()) {
+                    if (post.getTitle() != null) {
                         originalPost.setTitle(post.getTitle());
                     }
-                    if (post.getBody() != null && !post.getBody().isEmpty()) {
+                    if (post.getBody() != null) {
                         originalPost.setBody(post.getBody());
                     }
                     return postsRepository.save(originalPost);
@@ -82,10 +73,12 @@ public class PostsService implements IPostsService {
 
     @Override
     public String deletePost(Long id) {
-        if (postsRepository.findById(id).isPresent()) {
-            postsRepository.deleteById(id);
-            return "Post deleted successfully";
-        }
-        throw new NotFoundException("No such post in the database");
+        return postsRepository.findById(id)
+                .map(post -> {
+                    postsRepository.deleteById(id);
+                    return "Post deleted successfully";
+                })
+                .orElseThrow(() -> new NotFoundException("No such post in the database"));
     }
+
 }

@@ -13,9 +13,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = UserIdValidator.class)
 public @interface ValidUserId {
+
     String message() default "Invalid external user ID";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
 }

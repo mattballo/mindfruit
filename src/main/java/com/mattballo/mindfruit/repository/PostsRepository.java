@@ -9,8 +9,10 @@ import java.util.List;
 
 @Repository
 public interface PostsRepository extends JpaRepository<Post, Long> {
+
     List<Post> findByUserId(Long id);
 
-    @Query(value = "SELECT next_val+1 FROM post_seq", nativeQuery = true) // TODO: Improve
+    @Query(value = "SELECT coalesce(max(id), 0) + 1 FROM post", nativeQuery = true)
     Long getNextId();
+
 }
