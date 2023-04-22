@@ -1,15 +1,18 @@
 package com.mattballo.mindfruit.entity;
 
 import com.mattballo.mindfruit.annotation.ValidUserId;
-import io.swagger.v3.oas.annotations.Hidden;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.id.Assigned;
+import org.hibernate.sql.Insert;
+import org.hibernate.sql.Update;
 
 @Entity
 @NoArgsConstructor
@@ -17,6 +20,8 @@ import org.hibernate.id.Assigned;
 @Getter
 @Setter
 public class Post {
+    @Null(groups = {Insert.class})
+    @NotNull(groups = {Update.class})
     @Id
     private Long id;
 
@@ -30,4 +35,5 @@ public class Post {
 
     @NotBlank
     private String body;
+
 }

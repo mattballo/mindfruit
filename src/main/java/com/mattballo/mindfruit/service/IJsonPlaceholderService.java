@@ -15,4 +15,5 @@ public interface IJsonPlaceholderService {
     Optional<User> getUserByEmail(String email);
 
     Optional<Post> getPost(Long id);
+
 }

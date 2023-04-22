@@ -39,4 +39,5 @@ public class UserIdValidator implements ConstraintValidator<ValidUserId, Long> {
             return false;
         }
     }
+
 }

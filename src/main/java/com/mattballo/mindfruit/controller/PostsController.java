@@ -15,6 +15,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "Posts")
 public class PostsController {
+
     private final String MAPPING_URL = "/posts";
 
     @Autowired
@@ -22,8 +23,7 @@ public class PostsController {
 
     @PostMapping(MAPPING_URL)
     @Operation(description = "Creates a new post with the provided details, and returns the newly created post. " +
-            "Requires a valid user ID to be associated with the post.",
-            hidden = true)
+            "Requires a valid user ID to be associated with the post.")
     public ApiResponse<Post> savePost(@Valid @RequestBody Post post) {
         return new ApiResponse<>(postsService.savePost(post));
     }
