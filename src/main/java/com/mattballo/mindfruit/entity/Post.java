@@ -1,6 +1,7 @@
 package com.mattballo.mindfruit.entity;
 
 import com.mattballo.mindfruit.annotation.ValidUserId;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

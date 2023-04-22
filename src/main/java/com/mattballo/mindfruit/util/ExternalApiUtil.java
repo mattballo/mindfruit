@@ -6,6 +6,7 @@ import java.net.URL;
 
 public class ExternalApiUtil {
 
+    // TODO: Move to service
     public static HttpURLConnection getConnection(String url) throws IOException {
         HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
         conn.setRequestMethod("GET");

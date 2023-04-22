@@ -1,10 +1,13 @@
 package com.mattballo.mindfruit.model;
 
 import com.fasterxml.jackson.annotation.*;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 
 @Getter
+@Schema(hidden = true)
 public class ApiResponse<T> {
     private T data;
     private ResponseEntity errorResponse = null;
